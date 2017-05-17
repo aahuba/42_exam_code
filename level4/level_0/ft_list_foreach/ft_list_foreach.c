@@ -42,11 +42,14 @@
  *  			  to each element of the list.
  * =====================================================================================
  */
-void	ft_list_for_each(t_list *begin_list, void (*f)(void *))
+void	ft_list_foreach(t_list *begin_list, void (*f)(void *))
 {
 	t_list	*list;
 
 	list = begin_list;
 	while (list)
+	{
 		(*f)(list->data);
+		list = list->next;
+	}
 }		/* -----  end of function ft_list_for_each  ----- */
