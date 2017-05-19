@@ -17,7 +17,7 @@
  */
 
 
-#include	<stdlib.h>
+#include	<stdio.h>
 
 char	**ft_split(char *str);
 
@@ -29,5 +29,8 @@ char	**ft_split(char *str);
  */
 int	main (void)
 {
-	ft_split("This is a test");
+	char **test;
+
+	test = ft_split("This is a test");
+	printf("%s", test[3]);
 }				/* ----------  end of function main  ---------- */
