@@ -83,11 +83,16 @@ void	revWstr (char *str) {
 		strLen++;
 	revStr = (char *)malloc(sizeof(char) * (strLen + 1));
 	while (strLen >= 0) {
-		if (str[strLen] == ' ' || str[strLen] == '	' || strLen == 0) {
+		if (str[strLen] == ' ' || str[strLen] == '	') {
 			wordLen = strLen + 1;
 			while (str[wordLen] && str[wordLen] != ' ' && str[wordLen] != '	')
 				revStr[i++] = str[wordLen++];
 			revStr[i++] = ' ';
+		}
+		if (strLen == 0) {
+			wordLen = strLen;
+			while (str[wordLen] && str[wordLen] != ' ' && str[wordLen] != '	')
+				revStr[i++] = str[wordLen++];
 		}
 		strLen--;
 	}
