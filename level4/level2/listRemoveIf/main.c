@@ -55,8 +55,8 @@ int	main (void)
 //	printf("%c", *ptr);
 
 	node1->data = (void *)'a';
-	node2->data = (void *)'c';
-	node3->data = (void *)'b';
+	node2->data = (void *)'a';
+	node3->data = (void *)'a';
 
 //	printf("%c", (char)node1->data);
 
