@@ -39,6 +39,7 @@
  * ===============================================================================
  */
 #include "list.h"
+#include <stdio.h>
 /* 
  * ===  FUNCTION  ================================================================
  *         Name:  listRemoveIf
@@ -46,13 +47,27 @@
  *  			  "equal" to the reference data
  * ===============================================================================
  */
-void	listRemoveIf (tList **beginList, void *dataRef, int (*cmp)()) {
+void	listRemoveIf(tList **beginList, void *dataRef, int (*cmp)()) {
 	tList	*node;
+	tList	*badNode;
+	int		equal;
+	tList	*beforeNode;
 
+	beforeNode = node;
 	node = *beginList;
 	while (node) {
-		if (!(cmp(dataRef, node->data)))
-			free (node->data);
-		node = node->next;
+		equal = 0;
+		if (!(cmp(dataRef, node->data))) {
+			badNode = node;
+			node = node->next;
+			beforeNode->next = node;
+			free(badNode);
+			badNode = NULL;
+			equal = 1;
+		}
+		if (!equal) {
+			beforeNode = node;
+			node = node->next;
+		}
 	}
 }		/* -----  end of function listRemoveIf  ----- */
