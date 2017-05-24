@@ -6,14 +6,14 @@
 /*   By: zaz <zaz@staff.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/27 13:14:10 by zaz               #+#    #+#             */
-/*   Updated: 2017/05/23 17:05:13 by kmaitski         ###   ########.fr       */
+/*   Updated: 2017/05/24 11:17:29 by kmaitski         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef struct sList tList;
+typedef struct kList lList;
 
-struct sList
+struct kList
 {
 	int     data;
-	tList  *next;
+	lList  *next;
 };
