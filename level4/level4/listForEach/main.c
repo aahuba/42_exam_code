@@ -44,9 +44,13 @@ int	main(void) {
 	node2->data = malloc(sizeof(int));
 	node3->data = malloc(sizeof(int));
 
-	node1->data = (void *)1;
-	node2->data = (void *)2;
-	node3->data = (void *)3;
+//	node1->data = (void *)1;
+//	node2->data = (void *)2;
+//	node3->data = (void *)3;
+
+//	printf("%d\n", (int)node1->data);
+//	printf("%d\n", (int)node2->data);
+//	printf("%d\n", (int)node3->data);
 
 	node1->next = node2;
 	node2->next = node3;
@@ -64,9 +68,9 @@ int	main(void) {
  */
 void	changeTo5(void *pdata)
 {
-//	int *dataPtr;
-	printf("%d", int(*pdata));
-//	dataPtr = (int *)pdata;
+	int *dataPtr = (int *)pdata;
+//	printf("%d\n", (int)dataPtr);
 //	printf("%d", *dataPtr);
-//	*dataPtr = 5;
+	*dataPtr = '5';
+	printf("%d\n", *dataPtr);
 }		/* -----  end of function changeTo5  ----- */

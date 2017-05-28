@@ -46,11 +46,11 @@ void	listForEach(lList *beginList, void (*f)(void *)) {
 	lList *node;
 
 	node = beginList;
-//	while (node) {
-//		printf("%d", (int)node->data);
-//		node = node->next;
-//	}
-//	node = beginList;
+	while (node) {
+		printf("%d\n", (int)node->data);
+		node = node->next;
+	}
+	node = beginList;
 	while (node) {
 		f(node->data);
 		node = node->next;
