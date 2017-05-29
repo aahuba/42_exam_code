@@ -47,10 +47,17 @@
  */
 
 #include	<stdlib.h>
+#include <unistd.h>
+
 /******************************************************
 **               funtion prototypes                 ***
 *******************************************************/
 void roString(char *stringPtr);
+char *getLengthForNewString (char *stringPtr);
+size_t getFirstWordLength(char *stringPtr);
+void writeNewStringPtr(char *newStringPtr);
+void intializeNewStringPtr(char **newStringPtr, char *stringPtr, size_t
+		firstWordLength);
 
 /* 
  * ===  FUNCTION  ==================================================================
@@ -70,26 +77,49 @@ void roString(char *stringPtr);
  * =================================================================================
  */
 int	main(int argc, char **argv) {
-	size_t	i = 1;
+	size_t	i = 0;
 	if (argc > 1) {
-		while ((int)i++ < argc) {
+		while ((int)i++ < argc - 1) {
 			roString(argv[i]);
 		}
 	}
+	write(1, "\n", 1);
 }				/* ----------  end of function main  ---------- */
 
 /* 
  * ===  FUNCTION  ==================================================================
  *         Name:  roString
- *  Description:  
+ *  Description:  Takes a string and displays this string after rotating it one word
+ *  			  to the left.
+ *
+ *  			  Thus, the first word becomes the last, and others stay in the same
+ *  			  order.
+ *
+ *  			  A "word" is defined as a part of a string delimited either by
+ *  			  spaces/tabs, or by the start/end of the string.
+ *
+ *  			  Words will be separated by only one space in the output.
  * =================================================================================
  */
 void roString(char *stringPtr) {
-	size_t	i = 0;
-	char	*newStringPtr;
-	size_t	stringLength = 0;
-	size_t	firstWordLength = 0;
+	char	*newStringMemoryAreaPtr = getLengthForNewString(stringPtr);
+	size_t	firstWordLength = getFirstWordLength(stringPtr);
 
+	intializeNewStringPtr(&newStringMemoryAreaPtr, stringPtr, firstWordLength);
+	writeNewStringPtr(newStringMemoryAreaPtr);
+	free(newStringMemoryAreaPtr);
+}		/* -----  end of function roString  ----- */
+
+/* 
+ * ===  FUNCTION  ==================================================================
+ *         Name:  getLengthForNewString
+ *  Description:  Returns a malloced region of memory for newStringPtr.
+ * =================================================================================
+ */
+char	*getLengthForNewString (char *stringPtr) {
+	size_t	i = 0;
+	char	*newStringPtr = NULL;
+	size_t	stringLength = 0;
 
 	while (stringPtr[i]) {
 		if (stringPtr[i] > 32 || (stringPtr[i] < 33 && stringPtr[i + 1] > 32)) {
@@ -101,18 +131,62 @@ void roString(char *stringPtr) {
 		stringLength--;
 	}
 	newStringPtr = (char *)malloc(sizeof(*newStringPtr) * (stringLength + 1));
-	i = 0;
-	while (
-	free(newStringPtr);
-}		/* -----  end of function roString  ----- */
+	return (newStringPtr);
+}		/* -----  end of function getLengthForNewString  ----- */
+
 
 /* 
  * ===  FUNCTION  ==================================================================
- *         Name:  getLengthForNewString
- *  Description:  Returns a malloced region of memory for newStringPtr.
+ *         Name:  getFirstWordLength
+ *  Description:  Returns the length of the first word in the string pointed to
+ * 				  by stringPtr.
  * =================================================================================
  */
-char	*getLengthForNewString ()
+size_t	getFirstWordLength(char *stringPtr)
 {
-return <+return_value+>;
-}		/* -----  end of function getLengthForNewString  ----- */
+	size_t	firstWordLength = 0;
+
+	while (stringPtr[firstWordLength] && (stringPtr[firstWordLength] > 32)) {
+		firstWordLength++;
+	}
+	return (firstWordLength);
+}		/* -----  end of function getFirstWordLength  ----- */
+
+/* 
+ * ===  FUNCTION  ==================================================================
+ *         Name:  intializeNewStringPtr
+ *  Description:  Intialize newStringPtr
+ * =================================================================================
+ */
+void intializeNewStringPtr(char **newStringPtr, char *stringPtr, size_t
+		firstWordLength) {
+	size_t	i = firstWordLength;
+	size_t	index = 0;
+
+	while (stringPtr[i]) {
+		if (stringPtr[i] > 32 || (stringPtr[i] < 33 && stringPtr[i + 1] > 32 &&
+					index)) {
+			*newStringPtr[index++] = stringPtr[i];
+		}
+		i++;
+	}
+	i = 0;
+	while (firstWordLength--) {
+		*newStringPtr[index++] = stringPtr[i++];
+	}
+	*newStringPtr[index] = '\0';
+}		/* -----  end of function intializeNewStringPtr  ----- */
+
+
+/* 
+ * ===  FUNCTION  ======================================================================
+ *         Name:  writeNewStringPtr
+ *  Description:  Writes the string pointed to by newStringPtr to the stdout.
+ * =====================================================================================
+ */
+void	writeNewStringPtr(char *newStringPtr)
+{
+	while (*newStringPtr++) {
+		write(1, &*newStringPtr, 1);
+	}
+}		/* -----  end of function writeNewStringPtr  ----- */
