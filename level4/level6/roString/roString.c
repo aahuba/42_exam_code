@@ -56,7 +56,7 @@ void roString(char *stringPtr);
 char *getLengthForNewString (char *stringPtr);
 size_t getFirstWordLength(char *stringPtr);
 void writeNewStringPtr(char *newStringPtr);
-void intializeNewStringPtr(char **newStringPtr, char *stringPtr, size_t
+char *intializeNewStringPtr(char *newStringPtr, char *stringPtr, size_t
 		firstWordLength);
 
 /* 
@@ -83,7 +83,9 @@ int	main(int argc, char **argv) {
 			roString(argv[i]);
 		}
 	}
-	write(1, "\n", 1);
+	else {
+		write(1, "\n", 1);
+	}
 }				/* ----------  end of function main  ---------- */
 
 /* 
@@ -105,7 +107,8 @@ void roString(char *stringPtr) {
 	char	*newStringMemoryAreaPtr = getLengthForNewString(stringPtr);
 	size_t	firstWordLength = getFirstWordLength(stringPtr);
 
-	intializeNewStringPtr(&newStringMemoryAreaPtr, stringPtr, firstWordLength);
+	newStringMemoryAreaPtr = intializeNewStringPtr(newStringMemoryAreaPtr,
+			stringPtr, firstWordLength);
 	writeNewStringPtr(newStringMemoryAreaPtr);
 	free(newStringMemoryAreaPtr);
 }		/* -----  end of function roString  ----- */
@@ -130,7 +133,11 @@ char	*getLengthForNewString (char *stringPtr) {
 	if (stringPtr[--i] < 33) {
 		stringLength--;
 	}
-	newStringPtr = (char *)malloc(sizeof(*newStringPtr) * (stringLength + 1));
+	newStringPtr = (char *)malloc(sizeof(*newStringPtr) * stringLength + 1);
+	stringLength++;
+	while (stringLength) {
+		newStringPtr[stringLength--] = '\0';
+	}
 	return (newStringPtr);
 }		/* -----  end of function getLengthForNewString  ----- */
 
@@ -146,6 +153,9 @@ size_t	getFirstWordLength(char *stringPtr)
 {
 	size_t	firstWordLength = 0;
 
+	while (stringPtr[firstWordLength] < 33) {
+		firstWordLength++;
+	}
 	while (stringPtr[firstWordLength] && (stringPtr[firstWordLength] > 32)) {
 		firstWordLength++;
 	}
@@ -158,23 +168,35 @@ size_t	getFirstWordLength(char *stringPtr)
  *  Description:  Intialize newStringPtr
  * =================================================================================
  */
-void intializeNewStringPtr(char **newStringPtr, char *stringPtr, size_t
+char *intializeNewStringPtr(char *newStringPtr, char *stringPtr, size_t
 		firstWordLength) {
 	size_t	i = firstWordLength;
 	size_t	index = 0;
+	size_t	multipleWordsFlag = 0;
 
+	while (stringPtr[i] < 33 && stringPtr[i]) {
+		i++;
+	}
 	while (stringPtr[i]) {
+		multipleWordsFlag = 1;
 		if (stringPtr[i] > 32 || (stringPtr[i] < 33 && stringPtr[i + 1] > 32 &&
 					index)) {
-			*newStringPtr[index++] = stringPtr[i];
+			newStringPtr[index++] = stringPtr[i];
 		}
 		i++;
 	}
 	i = 0;
-	while (firstWordLength--) {
-		*newStringPtr[index++] = stringPtr[i++];
+	if (multipleWordsFlag) {
+		newStringPtr[index++] = ' ';
 	}
-	*newStringPtr[index] = '\0';
+	while (stringPtr[i++] < 33) {
+		firstWordLength--;
+	}
+	i--;
+	while (firstWordLength--) {
+		newStringPtr[index++] = stringPtr[i++];
+	}
+	return (newStringPtr);
 }		/* -----  end of function intializeNewStringPtr  ----- */
 
 
@@ -186,7 +208,8 @@ void intializeNewStringPtr(char **newStringPtr, char *stringPtr, size_t
  */
 void	writeNewStringPtr(char *newStringPtr)
 {
-	while (*newStringPtr++) {
+	while (*newStringPtr) {
 		write(1, &*newStringPtr, 1);
+		newStringPtr++;
 	}
 }		/* -----  end of function writeNewStringPtr  ----- */
