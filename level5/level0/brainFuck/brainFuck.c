@@ -52,7 +52,10 @@
  * =====================================================================================
  */
 
-#include	<stdlib.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
 /******************************************************
 **               funtion prototypes                 ***
 *******************************************************/
@@ -84,10 +87,12 @@ void brainFuck(char *brainFuckPtr);
  *  			  Any other character is a comment.
  * =================================================================================
  */
-int	main(int argc, char *argv[])
-{
+int	main(int argc, char *argv[]) {
+//	if (argc > 1) {
+//		printf("%s", argv[1]);
+//	}
 	if (argc > 1) {
-		brainFuck(argv[0]);
+		brainFuck(argv[1]);
 	}
 }				/* ----------  end of function main  ---------- */
 
@@ -99,12 +104,59 @@ int	main(int argc, char *argv[])
  *  			  prints it on the stdout.
  * =================================================================================
  */
-void	brainFuck(char *brainFuckPtr)
-{
+void	brainFuck(char *brainFuckPtr) {
 	size_t 	i = 0;
 	char	currentChar;
+	char	array[50000] = {0};
+	char	*ptr = array;
+	size_t	loopByte = 0;
+	size_t	holdSpot;
+
 
 	while (brainFuckPtr[i]) {
-		
+		currentChar = brainFuckPtr[i];
+		if (currentChar == '>') {
+			++ptr;
+		}
+		else if (currentChar == '<') {
+			--ptr;
+		}
+		else if (currentChar == '+') {
+			++*ptr;
+		}
+		else if (currentChar == '-') {
+			--*ptr;
+		}
+		else if (currentChar == '.') {
+			write(1, &*ptr, 1);
+		}
+		else if (currentChar == '[') {
+			loopByte = *ptr;
+			holdSpot = *ptr;
+			while (loopByte) {
+				currentChar = brainFuckPtr[++i];
+				if (currentChar == '>') {
+					++ptr;
+				}
+				else if (currentChar == '<') {
+					--ptr;
+				}
+				else if (currentChar == '+') {
+					++*ptr;
+				}
+				else if (currentChar == '-') {
+					--*ptr;
+				}
+				else if (currentChar == '.') {
+					write(1, &*ptr, 1);
+				}
+				else if (currentChar == ']') {
+					loopByte--;
+					i = holdSpot;
+
+				}
+			}
+		}
+		i++;
 	}
 }		/* -----  end of function brainFuck  ----- */
