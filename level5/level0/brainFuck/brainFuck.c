@@ -97,7 +97,7 @@ int	main(int argc, char *argv[]) {
 }				/* ----------  end of function main  ---------- */
 
 
-/* 
+/*
  * ===  FUNCTION  ==================================================================
  *         Name:  brainFuck
  *  Description:  Takes a brain fuck string pointer and interpretes and
@@ -109,8 +109,8 @@ void	brainFuck(char *brainFuckPtr) {
 	char	currentChar;
 	char	array[50000] = {0};
 	char	*ptr = array;
-	size_t	loopByte = 0;
 	size_t	holdSpot;
+	char	*loopPtr;
 
 
 	while (brainFuckPtr[i]) {
@@ -131,9 +131,9 @@ void	brainFuck(char *brainFuckPtr) {
 			write(1, &*ptr, 1);
 		}
 		else if (currentChar == '[') {
-			loopByte = *ptr;
-			holdSpot = *ptr;
-			while (loopByte) {
+			holdSpot = i;
+			loopPtr = ptr;
+			while (*loopPtr) {
 				currentChar = brainFuckPtr[++i];
 				if (currentChar == '>') {
 					++ptr;
@@ -151,7 +151,6 @@ void	brainFuck(char *brainFuckPtr) {
 					write(1, &*ptr, 1);
 				}
 				else if (currentChar == ']') {
-					loopByte--;
 					i = holdSpot;
 
 				}
