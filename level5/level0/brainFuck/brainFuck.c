@@ -60,6 +60,7 @@
 **               funtion prototypes                 ***
 *******************************************************/
 void brainFuck(char *brainFuckPtr);
+size_t loop(size_t i, char *brainFuckPtr, char **ptr);
 
 /* 
  * ===  FUNCTION  ==================================================================
@@ -88,9 +89,6 @@ void brainFuck(char *brainFuckPtr);
  * =================================================================================
  */
 int	main(int argc, char *argv[]) {
-//	if (argc > 1) {
-//		printf("%s", argv[1]);
-//	}
 	if (argc > 1) {
 		brainFuck(argv[1]);
 	}
@@ -106,53 +104,35 @@ int	main(int argc, char *argv[]) {
  */
 void	brainFuck(char *brainFuckPtr) {
 	size_t 	i = 0;
-	char	currentChar;
 	char	array[50000] = {0};
 	char	*ptr = array;
-	size_t	holdSpot;
-	char	*loopPtr;
+	size_t	loop;
 
 
 	while (brainFuckPtr[i]) {
-		currentChar = brainFuckPtr[i];
-		if (currentChar == '>') {
+		if (brainFuckPtr[i] == '>') {
 			++ptr;
 		}
-		else if (currentChar == '<') {
+		else if (brainFuckPtr[i] == '<') {
 			--ptr;
 		}
-		else if (currentChar == '+') {
+		else if (brainFuckPtr[i] == '+') {
 			++*ptr;
 		}
-		else if (currentChar == '-') {
+		else if (brainFuckPtr[i] == '-') {
 			--*ptr;
 		}
-		else if (currentChar == '.') {
+		else if (brainFuckPtr[i] == '.') {
 			write(1, &*ptr, 1);
 		}
-		else if (currentChar == '[') {
-			holdSpot = i;
-			loopPtr = ptr;
-			while (*loopPtr) {
-				currentChar = brainFuckPtr[++i];
-				if (currentChar == '>') {
-					++ptr;
+		else if (brainFuckPtr[i] == ']' && *ptr) {
+			loop = 1;
+			while (loop > 0) {
+				if (brainFuckPtr[--i] == ']') {
+					++loop;
 				}
-				else if (currentChar == '<') {
-					--ptr;
-				}
-				else if (currentChar == '+') {
-					++*ptr;
-				}
-				else if (currentChar == '-') {
-					--*ptr;
-				}
-				else if (currentChar == '.') {
-					write(1, &*ptr, 1);
-				}
-				else if (currentChar == ']') {
-					i = holdSpot;
-
+				else if (brainFuckPtr[i] == '[') {
+					--loop;
 				}
 			}
 		}
