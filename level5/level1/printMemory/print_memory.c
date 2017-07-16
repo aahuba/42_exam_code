@@ -1,103 +1,69 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   print_memory.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: exam <marvin@42.fr>                        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/05/31 10:03:22 by exam              #+#    #+#             */
-/*   Updated: 2016/05/31 11:03:54 by exam             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <unistd.h>
+#include <stdio.h>
 
-void	print_hex(unsigned char m)
+void	ft_putchar(char c)
 {
-	char	values[16] = "0123456789abcdef";
-	char	trsl[2] = {0};
-	int		i = 1;
+	write (1, &c, 1);
+}
 
-	if (!m)
-	{
-		write(1, "00", 2);
-	}
+void	ft_putascii(unsigned char c)
+{
+	if (c > 31 && c < 127)
+		ft_putchar(c);
 	else
+		ft_putchar('.');
+}
+
+void	ft_puthex(unsigned char c)
+{
+	char tab[17] = "0123456789abcdef";
+
+	ft_putchar(tab[c / 16]);
+	ft_putchar(tab[c % 16]);
+}
+
+void	print_line(unsigned char *str, size_t start, size_t max)
+{
+	size_t i;
+
+	i = start;
+	while (i < start + 16 && i < max)
 	{
-		while (i >= 0)
-		{
-			trsl[i] = values[m % 16];
-			m /= 16;
-			i--;
-		}
-		write(1, trsl, 2);
+		ft_puthex(str[i]);
+		if (i % 2)
+			ft_putchar(' ');
+		i++;
 	}
-}
-
-void	print_ascii(unsigned char m)
-{
-	if (m >= 32 && m <= 126)
-		write(1, &m, 1);
-	else
-		write(1, ".", 1);
-}
-
-int		calc_pad(int pos)
-{
-	int i = 0;
-	while (pos % 16)
+	while ( i < start + 16)
 	{
-		pos++;
-		i += 2;
+		ft_putchar(' ');
+		ft_putchar(' ');
+		if (i % 2)
+			ft_putchar(' ');
+		i++;
 	}
-	i += i / 4;
-	return (i);
-}
 
-void	print_pad(int i)
-{
-	while (i > 0)
+	i = start;
+	while(i < start + 16 && i < max)
 	{
-		write(1, " ", 1);
-		i--;
+		ft_putascii(str[i]);
+		i++;
 	}
+	ft_putchar('\n');
 }
 
-void    print_memory(const void *addr, size_t size)
+void	print_memory(const void *addr, size_t size)
 {
-	unsigned char	*ptr;
-	int				i = 0;
-	int				count_pass;
-	int				tcpt;
+	unsigned char *str;
+	size_t	c;
 
-	ptr = (unsigned char *)addr;
-	while (i < (int)size)
+
+	str = (unsigned char *)addr;
+	c = 0;
+
+	while (c < size)
 	{
-		count_pass = 0;
-		tcpt = i;
-		while (tcpt < (int)size && count_pass < 16)
-		{
-			print_hex(ptr[tcpt]);
-			tcpt++;
-			count_pass++;
-			if (tcpt < (int)size)
-			{
-				print_hex(ptr[tcpt]);
-				count_pass++;
-				tcpt++;
-			}
-			write(1, " ", 1);
-		}
-		print_pad(calc_pad(count_pass));
-		count_pass = 0;
-		tcpt = i;
-		while (tcpt < (int)size && count_pass < 16)
-		{
-			print_ascii(ptr[tcpt]);
-			count_pass++;
-			tcpt++;
-		}
-		write(1, "\n", 1);
-		i += count_pass;
+		print_line(str, c, size);
+		c += 16;
 	}
 }

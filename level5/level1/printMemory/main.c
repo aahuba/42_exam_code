@@ -29,12 +29,16 @@ void	print_memory(const void *addr, size_t size);
  * =====================================================================================
  */
 int	main (void) {
-	int	tab[10] = { 0, 234, 150, 255, 12, 16, 21, 42 };
-
-//	print_memory(tab, sizeof(tab));
-	printf("%p", (void *)&tab[2]);
+	int	tab[1] = { 257 };
+//	unsigned char *str;
+	
+//	str = (unsigned char *)tab;
+//	printf("%p", &str[3]);
+	print_memory(tab, sizeof(tab));
+//	printf("%p", (void *)&tab[2]);
 //	write(1, &array[0], 1);
 //	write(1, &array[1], 1);
 //	write(1, &array[2], 1);	
 //	write(1, &array[3], 1);
+	
 }				/* ----------  end of function main  ---------- */

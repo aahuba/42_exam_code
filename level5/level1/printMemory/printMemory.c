@@ -56,7 +56,9 @@
  */
 void printMemory (const void *memoryArea, size_t size)
 {
+	unsigned char	*memoryAreaBytes;
 
+	memoryAreaBytes = (unsigned char *)memoryArea;
 }		/* -----  end of function printMemory  ----- */
 
 
