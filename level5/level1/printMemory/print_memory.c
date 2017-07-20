@@ -1,15 +1,15 @@
 /*
- * =================================================================================
+ * =============================================================================
  *
  *       Filename:  printMemory.c
  *
  *    Description:  Assignment name  : printMemory
  *    				Expected files   : printMemory.c
  *    				Allowed functions: write
- *    ------------------------------------------------------------------------------
+ *    --------------------------------------------------------------------------
  *
- *    				Write a function that takes (const void *addr, size_t size), and
- *    				displays the memory as in the example.
+ *    				Write a function that takes (const void *addr, size_t size),
+ *    				and displays the memory as in the example.
  *
  *    				Your function must be declared as follows:
  *
@@ -44,25 +44,29 @@
  *         Author:  Kevin Maitski (KM), kevin.maitski@gmail.com
  *   Organization:  42
  *
- * =====================================================================================
+ * =============================================================================
  */
 #include <unistd.h>
 #include <stdio.h>
 
 /* 
- * ===  FUNCTION  ======================================================================
+ * ===  FUNCTION  ==============================================================
  *         Name:  print_ascii_or_dot
  *  Description:  If a byte can be printed as an ascii character it will print
  *  			  that character if not prints a dot.
- * =====================================================================================
+ * =============================================================================
  */
-static void	print_ascii_or_dot(const unsigned char *p_mem_area, size_t size, size_t i)
+static void	print_char_or_dot(const unsigned char *p_mem, size_t size, size_t i)
 {
-	while (i % 16 && i < size)
+	int	flag;
+
+	flag = 0;
+	while ((i % 16 && i < size) || !flag)
 	{
-		if (p_mem_area[i] >= 32 && p_mem_area[i] <= 126)
+		flag = 1;
+		if (p_mem[i] >= 32 && p_mem[i] <= 126)
 		{
-			write(1, &p_mem_area[i], 1);
+			write(1, &p_mem[i], 1);
 		}
 		else
 		{
@@ -72,10 +76,10 @@ static void	print_ascii_or_dot(const unsigned char *p_mem_area, size_t size, siz
 	}
 }		/* -----  end of function print_ascii_or_dot  ----- */
 /* 
- * ===  FUNCTION  ======================================================================
+ * ===  FUNCTION  ==============================================================
  *         Name:  print_hex_value
  *  Description:  Prints each individual value
- * =====================================================================================
+ * =============================================================================
  */
 static void print_hex_value(unsigned char half_byte)
 {
@@ -99,28 +103,35 @@ static void print_hex_value(unsigned char half_byte)
 	}
 }		/* -----  end of function print_hex_value  ----- */
 /* 
- * ===  FUNCTION  ======================================================================
+ * ===  FUNCTION  ==============================================================
  *         Name:  printHexAreaBytes
  *  Description:  Prints the hex values of each byte or spaces if there is not
  *  			  enough bytes to print.
- * =====================================================================================
+ * =============================================================================
  */
-static void	print_16_hex_values(const unsigned char *p_mem_area, size_t size, size_t i)
+static void	print_16_hex(const unsigned char *p_mem_area, size_t size, size_t i)
 {
-	while (i % 16 && i < size)
+	int	flag;
+
+	flag = 0;
+	while ((i % 16 && i < size) || !flag)
 	{
+		flag = 1;
 		print_hex_value((unsigned char)p_mem_area[i] / 16);
 		print_hex_value((unsigned char)p_mem_area[i] % 16);
-		if (!(i % 4))
+		++i;
+		if (!(i % 2))
 		{
 			write(1, " ", 1);
 		}
-		++i;
 	}
-	while (i % 16)
+	if (i % 16)
 	{
+		while (i < 39)
+		{
 		write(1, " ", 1);
-		i++;
+		++i;
+		}
 	}
 }		/* -----  end of function printHexAreaBytes  ----- */
 /* 
@@ -129,17 +140,18 @@ static void	print_16_hex_values(const unsigned char *p_mem_area, size_t size, si
  *  Description:  Displays the memory of memoryArea
  * =====================================================================================
  */
-void print_memory (const void *addr, size_t size)
+void 		print_memory (const void *addr, size_t size)
 {
 	const unsigned char	*memory_area_bytes_ptr;
 	size_t				i;
 
-	memory_area_bytes_ptr = addr;
+	memory_area_bytes_ptr = (const unsigned char *)addr;
 	i = 0;
 	while (i < size)
 	{
-		print_16_hex_values(&memory_area_bytes_ptr[i], size, i);
-		print_ascii_or_dot(&memory_area_bytes_ptr[i], size, i);
+		print_16_hex(memory_area_bytes_ptr, size, i);
+		print_char_or_dot(memory_area_bytes_ptr, size, i);
+		write(1, "\n", 1);
 		i += 16;
 	}
 }		/* -----  end of function printMemory  ----- */
